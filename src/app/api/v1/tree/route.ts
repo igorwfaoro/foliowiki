@@ -1,0 +1,2 @@
+import { auth } from "@/auth";import { createKnowledgeProvider } from "@/core/knowledge/provider-factory";
+export async function GET(){const session=await auth();if(!session?.accessToken)return Response.json({error:"Unauthorized"},{status:401});try{return Response.json(await createKnowledgeProvider().getTree({accessToken:session.accessToken,userId:session.user?.email??undefined}))}catch(error){return Response.json({error:error instanceof Error?error.message:"Unable to load tree"},{status:500})}}
