@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "foliowiki",
+  "account_id": "b5b8527ee232cec957d7c82a3fed9ea2",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-03",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "vars": {
+    "AUTH_TRUST_HOST": "true",
+  },
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "foliowiki",
+    },
+  ],
+}

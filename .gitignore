@@ -1,7 +1,11 @@
 .next
+.open-next
+.wrangler
 node_modules
 .env
 .env.local
+.dev.vars
+*.tsbuildinfo
 coverage
 *.log
 .DS_Store

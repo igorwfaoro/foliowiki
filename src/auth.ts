@@ -15,6 +15,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: { signIn: "/signin", error: "/signin" },
   providers: [
     Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
           scope: scopes,

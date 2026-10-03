@@ -1,4 +1,6 @@
-import { google } from "googleapis";
+import { docs_v1 } from "@googleapis/docs";
+import { drive_v3 } from "@googleapis/drive";
+import { OAuth2Client } from "google-auth-library";
 import { ProviderAuthenticationError } from "@/core/knowledge/errors";
 import type { KnowledgeProvider } from "@/core/knowledge/knowledge-provider";
 import type {
@@ -16,11 +18,11 @@ export class GoogleDriveProvider implements KnowledgeProvider {
   private clients(context: AccessContext) {
     if (!context.accessToken)
       throw new Error("Google access token is required");
-    const auth = new google.auth.OAuth2();
+    const auth = new OAuth2Client();
     auth.setCredentials({ access_token: context.accessToken });
     return {
-      drive: google.drive({ version: "v3", auth }),
-      docs: google.docs({ version: "v1", auth }),
+      drive: new drive_v3.Drive({ auth }),
+      docs: new docs_v1.Docs({ auth }),
     };
   }
   private async providerRequest<T>(request: Promise<T>): Promise<T> {
