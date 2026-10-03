@@ -1,2 +1,29 @@
-import { auth } from "@/auth";import { createKnowledgeProvider } from "@/core/knowledge/provider-factory";
-export async function GET(_:Request,{params}:{params:Promise<{id:string}>}){const session=await auth();if(!session?.accessToken)return Response.json({error:"Unauthorized"},{status:401});const{id}=await params;const provider=createKnowledgeProvider();if(!(await provider.canAccess(id,{accessToken:session.accessToken})))return Response.json({error:"Forbidden"},{status:403});try{return Response.json(await provider.getDocument(id,{accessToken:session.accessToken}))}catch(error){return Response.json({error:error instanceof Error?error.message:"Unable to load document"},{status:500})}}
+import {
+  getAuthenticationErrorResponse,
+  getProviderErrorResponse,
+} from "@/auth/api-response";
+import { getGoogleAccess } from "@/auth/google-access";
+import { createKnowledgeProvider } from "@/core/knowledge/provider-factory";
+
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const access = await getGoogleAccess(request);
+  const authenticationError = getAuthenticationErrorResponse(access);
+  if (access.status !== "authenticated") return authenticationError!;
+
+  const { id } = await params;
+  const provider = createKnowledgeProvider();
+  const context = { accessToken: access.accessToken, userId: access.userId };
+
+  try {
+    if (!(await provider.canAccess(id, context))) {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    return Response.json(await provider.getDocument(id, context));
+  } catch (error) {
+    return getProviderErrorResponse(error, "Unable to load document");
+  }
+}

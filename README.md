@@ -124,6 +124,7 @@ For the contribution flow and required checks, see [docs/development-workflow.md
 - [Product brief](PRODUCT.md) — promise, V1 scope, non-goals, and future direction
 - [Design principles](DESIGN.md) — visual and interaction guidance
 - [Architecture](docs/architecture.md) — provider boundary, document model, access, cache, and deployment
+- [Authentication](docs/authentication.md) — Google scopes, session security, token refresh and recovery
 - [Google setup](docs/google-setup.md) — Google Cloud APIs and OAuth configuration
 - [Deployment](docs/deployment.md) — Docker and Node deployment
 - [Development workflow](docs/development-workflow.md) — implementation and validation process

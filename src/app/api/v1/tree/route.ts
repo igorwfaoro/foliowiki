@@ -1,2 +1,23 @@
-import { auth } from "@/auth";import { createKnowledgeProvider } from "@/core/knowledge/provider-factory";
-export async function GET(){const session=await auth();if(!session?.accessToken)return Response.json({error:"Unauthorized"},{status:401});try{return Response.json(await createKnowledgeProvider().getTree({accessToken:session.accessToken,userId:session.user?.email??undefined}))}catch(error){return Response.json({error:error instanceof Error?error.message:"Unable to load tree"},{status:500})}}
+import {
+  getAuthenticationErrorResponse,
+  getProviderErrorResponse,
+} from "@/auth/api-response";
+import { getGoogleAccess } from "@/auth/google-access";
+import { createKnowledgeProvider } from "@/core/knowledge/provider-factory";
+
+export async function GET(request: Request) {
+  const access = await getGoogleAccess(request);
+  const authenticationError = getAuthenticationErrorResponse(access);
+  if (access.status !== "authenticated") return authenticationError!;
+
+  try {
+    return Response.json(
+      await createKnowledgeProvider().getTree({
+        accessToken: access.accessToken,
+        userId: access.userId,
+      }),
+    );
+  } catch (error) {
+    return getProviderErrorResponse(error, "Unable to load tree");
+  }
+}
