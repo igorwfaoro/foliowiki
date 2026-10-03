@@ -14,7 +14,6 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@auth/core": "^0.40.0",
     "googleapis": "^160.0.0",
     "lucide-react": "^0.468.0",
     "next": "^16.0.0",
